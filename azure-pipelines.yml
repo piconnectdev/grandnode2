@@ -53,13 +53,13 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Create code coverage report'
-    inputs:
-      command: custom
-      custom: tool
-      arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
-    inputs:
-      codeCoverageTool: 'cobertura'
-      summaryFileLocation: '$(Build.SourcesDirectory)\CodeCoverage\*cobertura.xml'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)\CodeCoverage\*cobertura.xml'
