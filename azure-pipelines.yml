@@ -50,14 +50,16 @@ steps:
     arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
     publishTestResults: true
     projects: '**/Tests/**/*.csproj'
-  
 
-- task: reportgenerator@4
-  inputs:
-    reports: **/coverage.cobertura.xml;artifact/**/cobertura-coverage.xml
-    targetdir: $(Pipeline.Workspace)/coveragereport
+- task: DotNetCoreCLI@2
+  displayName: 'Create code coverage report'
+    inputs:
+      command: custom
+      custom: tool
+      arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura'
 
 - task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: "Cobertura"
-    summaryFileLocation: $(Pipeline.Workspace)/coveragereport/Cobertura.xml
+  displayName: 'Publish code coverage report'
+    inputs:
+      codeCoverageTool: 'cobertura'
+      summaryFileLocation: '$(Build.SourcesDirectory)\CodeCoverage\*cobertura.xml'
