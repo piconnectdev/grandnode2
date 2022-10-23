@@ -52,14 +52,11 @@ steps:
     projects: '**/Tests/**/*.csproj'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Create code coverage report'
+  displayName: 'Install ReportGenerator'
   inputs:
     command: custom
     custom: tool
-    arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura'
+    arguments: 'install --global dotnet-reportgenerator-globaltool --version 4.8.12'
 
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish code coverage report'
-  inputs:
-    codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)\CodeCoverage\*cobertura.xml'
+- script: reportgenerator "-reports:$(Build.SourcesDirectory)/build_reports/**/coverage.cobertura.xml"" -targetdir:$(Build.SourcesDirectory)/build_reports/code_coverage" -reporttypes:HtmlInline_AzurePipelines;Cobertura
+  displayName: Merge code coverage files
